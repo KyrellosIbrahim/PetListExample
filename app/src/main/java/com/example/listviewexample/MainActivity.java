@@ -3,9 +3,12 @@ package com.example.listviewexample;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +20,14 @@ import model.Pet;
 public class MainActivity extends AppCompatActivity {
     ListView petListWidget;
     ArrayList<Pet> pets = new ArrayList<>();
+    AdapterView.OnItemClickListener clickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            Pet selected = (Pet) adapterView.getItemAtPosition(i);
+            String message = "Hello " + selected.getName() + "!";
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +48,10 @@ public class MainActivity extends AppCompatActivity {
 
         petListWidget = findViewById(R.id.listViewWidg);
         Random rand = new Random();
-        int selection = 3;
+        int selection = 2;
         populateListView(selection);
+
+        petListWidget.setOnItemClickListener(clickListener);
     }
 
     private void populateListView(int selection) {
@@ -48,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case 2:
                 usingDataArray();
+                petListWidget.setOnItemClickListener(clickListener);
                 break;
             case 3:
                 usingTwoLines();
@@ -70,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
      * This method populates the list view using a string resource containing the list of a data array
      */
     private void usingDataArray() {
-        ArrayAdapter<Pet> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_2, pets);
+        ArrayAdapter<Pet> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_2, android.R.id.text1, pets);
         petListWidget.setAdapter(adapter);
     }
 
