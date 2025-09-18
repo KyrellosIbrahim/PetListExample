@@ -5,8 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import model.Pet;
@@ -34,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
         petListWidget = findViewById(R.id.listViewWidg);
         Random rand = new Random();
-        int selection = 2;
+        int selection = 3;
         populateListView(selection);
     }
 
@@ -45,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case 2:
                 usingDataArray();
+                break;
+            case 3:
+                usingTwoLines();
                 break;
 
         }
@@ -64,7 +70,22 @@ public class MainActivity extends AppCompatActivity {
      * This method populates the list view using a string resource containing the list of a data array
      */
     private void usingDataArray() {
-        ArrayAdapter<Pet> adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, pets);
+        ArrayAdapter<Pet> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_2, pets);
+        petListWidget.setAdapter(adapter);
+    }
+
+    private void usingTwoLines() {
+        List<HashMap<String, String>> data = new ArrayList<>();
+        for (Pet p : pets) {
+            HashMap<String, String> current = new HashMap<>();
+            current.put("name", p.getName());
+            current.put("breed", p.getBreed());
+            data.add(current);
+        }
+
+        SimpleAdapter adapter = new SimpleAdapter(this, data, android.R.layout.simple_list_item_2,
+                new String[]{"name", "breed"},
+                new int[]{android.R.id.text1, android.R.id.text2});
         petListWidget.setAdapter(adapter);
     }
 }
